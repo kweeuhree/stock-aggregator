@@ -22,7 +22,7 @@ The main goal of this project is to implement **Go-native concurrency patterns**
 
 **Data Fetching** retrieves stock data from free stock market APIs, concurrently.
 
-- Fetches stock data using multiple free APIs (such as FMP Cloud or Alpha Vantage).
+- Fetches stock data using multiple free APIs (such as FMP Cloud).
 - Each URL request is handled concurrently using Go's goroutines, ensuring efficient data fetching.
 - Errors are logged if there are any issues with the API requests.
 - The Fetch method of the Fetcher returns the raw data for further processing.
