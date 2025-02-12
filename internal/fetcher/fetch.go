@@ -61,7 +61,7 @@ func (f *Fetcher) fetchData(urls []string) ([]map[string]interface{}, error) {
 
 		go func(url string) {
 			defer wg.Done()
-			batch, err := f.request(url)
+			batch, err := f.RequestAndParse(url)
 
 			if err != nil {
 				f.ErrorLog.Printf("failed fetching.\t\nurl: %s\t\nerr: %+v", url, err)
@@ -98,32 +98,6 @@ func (f *Fetcher) fetchData(urls []string) ([]map[string]interface{}, error) {
 	// Collect data from dataChan
 	for batch := range dataChan {
 		data = append(data, batch...)
-	}
-
-	return data, nil
-}
-
-func (f *Fetcher) request(url string) ([]map[string]interface{}, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("request to %s failed with status: %d", url, resp.StatusCode)
-	}
-
-	var data []map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		return nil, fmt.Errorf("failed to parse JSON from %s: %w", url, err)
-	}
-	// Pretty print JSON
-	prettyJSON, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		f.ErrorLog.Println("Failed to format JSON:", err)
-	} else {
-		fmt.Println(string(prettyJSON))
 	}
 
 	return data, nil
