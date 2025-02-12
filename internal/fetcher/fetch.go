@@ -19,24 +19,31 @@ func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
 		f.ErrorLog.Fatal(err)
 	}
 
+	// Pretty print JSON
+	prettyJSON, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		f.ErrorLog.Println("Failed to format JSON:", err)
+	} else {
+		fmt.Println(string(prettyJSON))
+	}
 	return data, nil
 }
 
 func (f *Fetcher) getUrls() ([]string, error) {
-	finHubApikey := os.Getenv("FIN_HUB_API_KEY")
+	marketStackApikey := os.Getenv("MARKET_STACK_API_KEY")
 	fmpCloudApiKey := os.Getenv("FMP_CLOUD_API_KEY")
 
-	if finHubApikey == "" || fmpCloudApiKey == "" {
+	if marketStackApikey == "" || fmpCloudApiKey == "" {
 		return nil, fmt.Errorf("empty api key")
 	}
 
 	stocks := "AAPL,MSFT"
 
-	finHubUrl := fmt.Sprintf("https://www.alphavantage.co/query?function=REALTIME_BULK_QUOTES&symbol=%s&apikey=%s", stocks, finHubApikey)
+	// marketStackUrl := fmt.Sprintf("https://api.marketstack.com/v1/intraday/latest?access_key=%s&symbols=%s", marketStackApikey, stocks)
 
-	// fmpCloudURl := fmt.Sprintf("https://fmpcloud.io/api/v3/quote/%s?apikey=%s", stocks, fmpCloudApiKey)
+	fmpCloudURl := fmt.Sprintf("https://fmpcloud.io/api/v3/quote/%s?apikey=%s", stocks, fmpCloudApiKey)
 
-	urls := []string{finHubUrl}
+	urls := []string{fmpCloudURl}
 
 	return urls, nil
 }
