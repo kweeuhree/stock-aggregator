@@ -3,25 +3,11 @@ package fetcher
 import (
 	"encoding/json"
 	"fmt"
-	"log"
-	"net/http"
 	"os"
 	"sync"
 )
 
-type Fetcher struct {
-	InfoLog  *log.Logger
-	ErrorLog *log.Logger
-}
-
-func New(infoLog, errorLog *log.Logger) *Fetcher {
-	return &Fetcher{
-		InfoLog:  infoLog,
-		ErrorLog: errorLog,
-	}
-}
-
-func (f *Fetcher) Fetch() ([][]map[string]interface{}, error) {
+func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
 	f.InfoLog.Println("Attempting to fetch...")
 	urls, err := f.getUrls()
 	if err != nil {
