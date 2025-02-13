@@ -4,14 +4,20 @@ import (
 	"log"
 )
 
-type Fetcher struct {
-	InfoLog  *log.Logger
-	ErrorLog *log.Logger
+type RequesterParser interface {
+	RequestAndParse(url string) ([]map[string]interface{}, error)
 }
 
-func New(infoLog, errorLog *log.Logger) *Fetcher {
+type Fetcher struct {
+	ErrorLog        *log.Logger
+	Urls            []string
+	RequesterParser RequesterParser
+}
+
+func New(requesterParser RequesterParser, errorLog *log.Logger, urls []string) *Fetcher {
 	return &Fetcher{
-		InfoLog:  infoLog,
-		ErrorLog: errorLog,
+		ErrorLog:        errorLog,
+		Urls:            urls,
+		RequesterParser: requesterParser,
 	}
 }
