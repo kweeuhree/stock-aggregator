@@ -7,12 +7,14 @@ import (
 	"net/http"
 )
 
-func (f *Fetcher) RequestAndParse(url string) ([]map[string]interface{}, error) {
-	body, err := f.Request(url)
+type Requester struct{}
+
+func (r *Requester) RequestAndParse(url string) ([]map[string]interface{}, error) {
+	body, err := request(url)
 	if err != nil {
 		return nil, err
 	}
-	parsedBody, err := f.Parse(body)
+	parsedBody, err := parse(body)
 	if err != nil {
 		return nil, err
 	}
