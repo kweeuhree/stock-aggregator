@@ -22,7 +22,7 @@ func (r *Requester) RequestAndParse(url string) ([]map[string]interface{}, error
 	return parsedBody, nil
 }
 
-func (f *Fetcher) Request(url string) ([]byte, error) {
+func request(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (f *Fetcher) Request(url string) ([]byte, error) {
 	return body, nil
 }
 
-func (f *Fetcher) Parse(body []byte) ([]map[string]interface{}, error) {
+func parse(body []byte) ([]map[string]interface{}, error) {
 	// Try to unmarshal the response as an array first
 	var dataArray []map[string]interface{}
 	if err := json.Unmarshal(body, &dataArray); err == nil {
