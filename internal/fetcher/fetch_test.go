@@ -6,30 +6,14 @@ import (
 	"testing"
 )
 
-type MockRequesterParser struct {
-	MockRequest func(url string) ([]map[string]interface{}, error)
-}
-
-func (mrp *MockRequesterParser) RequestAndParse(url string) ([]map[string]interface{}, error) {
-	return mrp.MockRequest(url)
-}
-
-type MockFetcher struct {
-	ErrorLog        *log.Logger
-	Urls            *[]string
-	RequesterParser MockRequesterParser
-}
-
 func TestFetch(t *testing.T) {
 	tests := []struct {
 		name        string
-		testUrls    []string
 		mockRequest func(url string) ([]map[string]interface{}, error)
 		expectError bool
 	}{
 		{
-			name:     "Successful fetch",
-			testUrls: []string{"https://i-am-url.com", "https://i-am-stock-api.com", "https://go-dev.go"},
+			name: "Successful fetch",
 			mockRequest: func(url string) ([]map[string]interface{}, error) {
 				return []map[string]interface{}{
 					{"symbol": "AAPL"},
@@ -38,8 +22,7 @@ func TestFetch(t *testing.T) {
 			expectError: false,
 		},
 		{
-			name:     "Unsuccessful fetch",
-			testUrls: []string{"https://i-am-url.com", "https://i-am-stock-api.com", "https://go-dev.go"},
+			name: "Unsuccessful fetch",
 			mockRequest: func(url string) ([]map[string]interface{}, error) {
 				return nil,
 					fmt.Errorf("error occurred")
@@ -56,7 +39,7 @@ func TestFetch(t *testing.T) {
 
 			fetcher := &Fetcher{
 				ErrorLog:        log.Default(),
-				Urls:            entry.testUrls,
+				Urls:            []string{"https://i-am-url.com", "https://i-am-stock-api.com", "https://go-dev.go"},
 				RequesterParser: mockRequesterParser,
 			}
 
