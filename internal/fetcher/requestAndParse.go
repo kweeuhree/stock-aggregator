@@ -55,6 +55,7 @@ func parse(body []byte) ([]map[string]interface{}, error) {
 		// Check if the object contains a 'data' key:
 		// Will handle MarketStack API response
 		if data, exists := dataObject["data"]; exists {
+			// If 'data' is an array, convert it to []map[string]interface{}
 			if dataArray, ok := data.([]interface{}); ok {
 				convertedToMap, err := convertToMapSlice(dataArray)
 				if err != nil {
