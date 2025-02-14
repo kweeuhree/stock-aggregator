@@ -1,6 +1,7 @@
 package fetcher
 
 import (
+	"fmt"
 	"log"
 	"testing"
 )
@@ -35,6 +36,15 @@ func TestFetch(t *testing.T) {
 				}, nil
 			},
 			expectError: false,
+		},
+		{
+			name:     "Unsuccessful fetch",
+			testUrls: []string{"https://i-am-url.com", "https://i-am-stock-api.com", "https://go-dev.go"},
+			mockRequest: func(url string) ([]map[string]interface{}, error) {
+				return nil,
+					fmt.Errorf("error occurred")
+			},
+			expectError: true,
 		},
 	}
 
