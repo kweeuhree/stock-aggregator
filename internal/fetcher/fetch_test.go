@@ -13,8 +13,6 @@ func (mrp *MockRequesterParser) RequestAndParse(url string) ([]map[string]interf
 	return mrp.MockRequest(url)
 }
 
-type MyMockRequesterParser struct{}
-
 type MockFetcher struct {
 	ErrorLog        *log.Logger
 	Urls            *[]string
