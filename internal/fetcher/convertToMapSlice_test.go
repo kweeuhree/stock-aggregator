@@ -30,6 +30,22 @@ func TestConvertToMapSlice(t *testing.T) {
 			result:        nil,
 			expectedError: true,
 		},
+		{
+			name:          "Empty input",
+			testData:      []interface{}{},
+			result:        []map[string]interface{}{},
+			expectedError: false,
+		},
+		{
+			name: "Mixed valid and invalid types",
+			testData: []interface{}{
+				map[string]interface{}{"valid": "map"},
+				"invalid string",
+				42,
+			},
+			result:        nil,
+			expectedError: true,
+		},
 	}
 
 	for _, entry := range tests {
