@@ -61,8 +61,12 @@ func TestFetch(t *testing.T) {
 			}
 
 			data, err := fetcher.Fetch()
-			if err != nil && entry.expectError == true {
-				t.Errorf("expected error: %v, got: %v", entry.expectError, err)
+			if err != nil && entry.expectError == false {
+				t.Errorf("did not expect error, got: %v", err)
+			}
+
+			if err == nil && entry.expectError == true {
+				t.Error("expected error, but did not get any")
 			}
 
 			if err == nil && len(data) == 0 {
