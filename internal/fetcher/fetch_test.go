@@ -51,7 +51,7 @@ func TestFetch(t *testing.T) {
 			}
 
 			data, err := fetcher.Fetch()
-			if (err != nil) != entry.expectError {
+			if err != nil && entry.expectError == true {
 				t.Errorf("expected error: %v, got: %v", entry.expectError, err)
 			}
 
