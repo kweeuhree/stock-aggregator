@@ -2,6 +2,7 @@ package fetcher
 
 import (
 	"fmt"
+	"sync"
 )
 
 func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
@@ -19,21 +20,29 @@ func (f *Fetcher) owner() (<-chan []map[string]interface{}, <-chan error) {
 	dataChan := make(chan []map[string]interface{}, len(f.Urls))
 	errChan := make(chan error, len(f.Urls))
 
+	wg := &sync.WaitGroup{}
+
+	for _, url := range f.Urls {
+		wg.Add(1)
+
+		go func(url string) {
+			defer wg.Done()
+			batch, err := f.RequesterParser.RequestAndParse(url)
+
+			if err != nil {
+				f.ErrorLog.Printf("\t\nurl: %s\t\nerr: %+v", url, err)
+				errChan <- err
+				return
+			}
+
+			dataChan <- batch
+		}(url)
+	}
+
 	go func() {
-		for _, url := range f.Urls {
-
-			go func(url string) {
-				batch, err := f.RequesterParser.RequestAndParse(url)
-
-				if err != nil {
-					f.ErrorLog.Printf("\t\nurl: %s\t\nerr: %+v", url, err)
-					errChan <- err
-					return
-				}
-
-				dataChan <- batch
-			}(url)
-		}
+		wg.Wait()
+		defer close(dataChan)
+		defer close(errChan)
 	}()
 
 	return dataChan, errChan
