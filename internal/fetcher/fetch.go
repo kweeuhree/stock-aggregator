@@ -1,8 +1,10 @@
 package fetcher
 
 import (
+	"context"
 	"fmt"
 	"sync"
+	"time"
 )
 
 // Fetch() retrieves data from multiple URLs concurrently and returns the aggregated results.
@@ -13,7 +15,11 @@ import (
 //   - A slice of maps containing the fetched data.
 //   - An error if one or more requests fail.
 func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
-	dataChan, errChan := f.owner()
+	// Context with a timeout prevents blocking
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	dataChan, errChan := f.owner(ctx)
 	data, err := f.consumer(dataChan, errChan)
 
 	if err != nil {
@@ -26,7 +32,7 @@ func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
 // owner() initializes and returns dataChan and errChan,
 // synchronizes goroutines that fetch and parse data,
 // and closes channels upon completion of all goroutines
-func (f *Fetcher) owner() (<-chan []map[string]interface{}, <-chan error) {
+func (f *Fetcher) owner(ctx context.Context) (<-chan []map[string]interface{}, <-chan error) {
 	// Create buffered channels for data and errors
 	// The buffer size is set to the number of URLs to avoid blocking
 	dataChan := make(chan []map[string]interface{}, len(f.Urls))
@@ -42,17 +48,33 @@ func (f *Fetcher) owner() (<-chan []map[string]interface{}, <-chan error) {
 		go func(url string) {
 			// Defer decrementing the WaitGroup
 			defer wg.Done()
+
+			// Handle panics in goroutines
+			defer func() {
+				if r := recover(); r != nil {
+					errChan <- fmt.Errorf("panic in goroutine: %v", r)
+				}
+			}()
+
 			// Fetch and parse the data from the URL
 			batch, err := f.RequesterParser.RequestAndParse(url)
 
 			if err != nil {
 				// In case of error log the error and send to errChan
 				f.ErrorLog.Printf("\t\nurl: %s\t\nerr: %+v", url, err)
-				errChan <- err
+				select {
+				case errChan <- err:
+				case <-ctx.Done(): // Cancel context
+					return
+				}
 				return
 			}
 			// Send data to dataChan
-			dataChan <- batch
+			select {
+			case dataChan <- batch:
+			case <-ctx.Done(): // Cancel context
+				return
+			}
 		}(url)
 	}
 
