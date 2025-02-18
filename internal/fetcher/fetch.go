@@ -5,8 +5,9 @@ import (
 )
 
 func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
-	dataChan, errChan := f.owner(f.Urls)
+	dataChan, errChan := f.owner()
 	data, err := f.consumer(dataChan, errChan)
+
 	if err != nil {
 		return nil, err
 	}
@@ -14,12 +15,12 @@ func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
 	return data, nil
 }
 
-func (f *Fetcher) owner(urls []string) (<-chan []map[string]interface{}, <-chan error) {
-	dataChan := make(chan []map[string]interface{}, len(urls))
-	errChan := make(chan error, len(urls))
+func (f *Fetcher) owner() (<-chan []map[string]interface{}, <-chan error) {
+	dataChan := make(chan []map[string]interface{}, len(f.Urls))
+	errChan := make(chan error, len(f.Urls))
 
 	go func() {
-		for _, url := range urls {
+		for _, url := range f.Urls {
 
 			go func(url string) {
 				batch, err := f.RequesterParser.RequestAndParse(url)
