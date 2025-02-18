@@ -5,24 +5,40 @@ import (
 )
 
 func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
-
-	dataChan := make(chan []map[string]interface{}, len(f.Urls))
-	errChan := make(chan error, len(f.Urls))
-
-	for _, url := range f.Urls {
-
-		go func(url string) {
-			batch, err := f.RequesterParser.RequestAndParse(url)
-
-			if err != nil {
-				f.ErrorLog.Printf("\t\nurl: %s\t\nerr: %+v", url, err)
-				errChan <- err
-				return
-			}
-
-			dataChan <- batch
-		}(url)
+	dataChan, errChan := f.owner(f.Urls)
+	data, err := f.consumer(dataChan, errChan)
+	if err != nil {
+		return nil, err
 	}
+
+	return data, nil
+}
+
+func (f *Fetcher) owner(urls []string) (<-chan []map[string]interface{}, <-chan error) {
+	dataChan := make(chan []map[string]interface{}, len(urls))
+	errChan := make(chan error, len(urls))
+
+	go func() {
+		for _, url := range urls {
+
+			go func(url string) {
+				batch, err := f.RequesterParser.RequestAndParse(url)
+
+				if err != nil {
+					f.ErrorLog.Printf("\t\nurl: %s\t\nerr: %+v", url, err)
+					errChan <- err
+					return
+				}
+
+				dataChan <- batch
+			}(url)
+		}
+	}()
+
+	return dataChan, errChan
+}
+
+func (f *Fetcher) consumer(dataChan <-chan []map[string]interface{}, errChan <-chan error) ([]map[string]interface{}, error) {
 	// Collect results from the channels
 	var data []map[string]interface{}
 	var errors []error
@@ -35,9 +51,6 @@ func (f *Fetcher) Fetch() ([]map[string]interface{}, error) {
 			data = append(data, batch...)
 		}
 	}
-
-	close(dataChan)
-	close(errChan)
 
 	// Check if there were any errors
 	if len(errors) > 0 {
