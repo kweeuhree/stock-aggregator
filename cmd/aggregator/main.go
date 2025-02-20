@@ -25,7 +25,7 @@ func main() {
 
 	requester := &fetcher.Requester{}
 	fetcher := fetcher.New(requester, errorLog, urls)
-	aggregator := aggregator.New(errorLog)
+	aggregator := aggregator.New(len(urls))
 
 	app := application{
 		errorLog:   errorLog,

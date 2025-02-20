@@ -1,14 +1,17 @@
 package aggregator
 
-import "log"
-
 type Aggregator struct {
-	Aggregator *map[string]string
-	ErrorLog   *log.Logger
+	Highs  []interface{}
+	Lows   []interface{}
+	Opens  []interface{}
+	Closes []interface{}
 }
 
-func New(errorLog *log.Logger) *Aggregator {
+func New(size int) *Aggregator {
 	return &Aggregator{
-		ErrorLog: errorLog,
+		Highs:  make([]interface{}, 0, size),
+		Lows:   make([]interface{}, 0, size),
+		Opens:  make([]interface{}, 0, size),
+		Closes: make([]interface{}, 0, size),
 	}
 }
