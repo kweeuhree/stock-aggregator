@@ -16,7 +16,9 @@ type application struct {
 func main() {
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	urls, err := getUrls()
+	stock := getUserInput()
+
+	urls, err := getUrls(stock)
 	if err != nil {
 		errorLog.Fatalf("failed getting urls: %s", err)
 	}
