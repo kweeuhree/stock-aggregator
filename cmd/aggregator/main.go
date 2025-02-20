@@ -52,5 +52,10 @@ func (app *application) run() error {
 		app.errorLog.Printf("failed aggregating: %+v", err)
 	}
 
+	result := app.aggregator.CalculateAverages()
+
+	infoLog.Println("Aggregated averages:")
+	PrettyPrint(result)
+
 	return nil
 }
