@@ -44,7 +44,7 @@ func (app *application) run() error {
 	infoLog.Println("Fetching data concurrently...")
 	fetched, err := app.fetcher.Fetch()
 	if err != nil {
-		app.errorLog.Printf("failed fetching: %+v", err)
+		return err
 	}
 
 	err = app.aggregator.Aggregate(fetched)
