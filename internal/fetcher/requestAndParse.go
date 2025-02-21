@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"stock-aggregator/utils"
 )
 
 type Requester struct{}
@@ -57,7 +59,7 @@ func parse(body []byte) ([]map[string]interface{}, error) {
 		if data, exists := dataObject["data"]; exists {
 			// If 'data' is an array, convert it to []map[string]interface{}
 			if dataArray, ok := data.([]interface{}); ok {
-				convertedToMap, err := convertToMapSlice(dataArray)
+				convertedToMap, err := utils.ConvertToMapSlice(dataArray)
 				if err != nil {
 					return nil, err
 				}

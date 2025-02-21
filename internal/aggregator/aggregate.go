@@ -1,8 +1,8 @@
 package aggregator
 
 import (
-	"math"
 	"reflect"
+	"stock-aggregator/utils"
 )
 
 func (a *Aggregator) Aggregate(data []map[string]interface{}) error {
@@ -45,7 +45,7 @@ func (a *Aggregator) CalculateAverages() map[string]float64 {
 	return result
 }
 
-func calculate(field interface{}) float64 {
+func calculateSum(field interface{}) float64 {
 	slice, ok := field.([]interface{})
 	if !ok {
 		return 0
