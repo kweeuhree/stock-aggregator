@@ -6,15 +6,21 @@ This repository contains a **Stock Market Aggregator** CLI program built with Go
 
 The project is designed to collect **stock market data** from free APIs (MarketStack, FMPCloud, and FinHub) and aggregate the data to show the **average price** of stocks, given a user inputs a stock ticker into a prompt.
 
+---
+
 ### 🎯 Project Goal
 
 The main goal of this project is to implement **Go-native concurrency patterns** and apply them in a real-world scenario of fetching and processing stock data. The program fetches data from multiple APIs concurrently, processes it, and aggregates the data for providing insights.
+
+---
 
 ### 📷 Screen Capture
 
 <p align="center">
 <img src="assets/aggregator.png" alt="Stock Price Aggregator CLI program screenshot">
 </p>
+
+---
 
 ### 📋 Project Breakdown
 
@@ -43,6 +49,8 @@ The main goal of this project is to implement **Go-native concurrency patterns**
 - Converting a slice of interfaces into a slice of maps
 - Rounding a float64 to two decimals
 - Pretty printing a JSON object to improve readabilty
+
+---
 
 ### 😃 Code Snippets I am excited about
 
