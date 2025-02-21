@@ -1,4 +1,4 @@
-package fetcher
+package utils
 
 import "testing"
 
@@ -50,7 +50,7 @@ func TestConvertToMapSlice(t *testing.T) {
 
 	for _, entry := range tests {
 		t.Run(entry.name, func(t *testing.T) {
-			result, err := convertToMapSlice(entry.testData)
+			result, err := ConvertToMapSlice(entry.testData)
 
 			if len(result) != len(entry.result) {
 				t.Errorf("expected result length: %d, got: %d", len(entry.result), len(result))

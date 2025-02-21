@@ -1,8 +1,8 @@
-package fetcher
+package utils
 
 import "fmt"
 
-func convertToMapSlice(data []interface{}) ([]map[string]interface{}, error) {
+func ConvertToMapSlice(data []interface{}) ([]map[string]interface{}, error) {
 
 	var result []map[string]interface{}
 	for _, item := range data {
