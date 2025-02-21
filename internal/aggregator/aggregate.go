@@ -37,7 +37,7 @@ func (a *Aggregator) CalculateAverages() map[string]float64 {
 		// convert each field to interface
 		field := v.Field(i).Interface()
 		// get average of each fiels
-		average := calculate(field)
+		average := calculateSum(field)
 		// reassign the field to the average value
 		result[v.Type().Field(i).Name] = average
 	}
@@ -60,9 +60,5 @@ func calculateSum(field interface{}) float64 {
 
 	result := sum / float64(len(slice))
 
-	return roundToTwoDecimals(result)
-}
-
-func roundToTwoDecimals(num float64) float64 {
-	return math.Round(num*100) / 100
+	return utils.RoundFloatToTwoDecimals(result)
 }
