@@ -7,19 +7,28 @@ import (
 
 func TestRequestAndParse(t *testing.T) {
 	tests := []struct {
-		name     string
-		url      string
-		expected []map[string]interface{}
+		name          string
+		url           string
+		expected      []map[string]interface{}
+		expectedError bool
 	}{
 		{
-			name:     "ReqResUsers list of users",
-			url:      "https://reqres.in/api/users?page=2",
-			expected: testdata.ReqResUsers,
+			name:          "Invalid URL",
+			url:           "https://foo-bar.foo/api/bar?page=2",
+			expected:      nil,
+			expectedError: true,
 		},
 		{
-			name:     "JSONPlaceholder list of users",
-			url:      "https://jsonplaceholder.typicode.com/users",
-			expected: testdata.JsonPlaceholderUsers,
+			name:          "ReqResUsers list of users",
+			url:           "https://reqres.in/api/users?page=2",
+			expected:      testdata.ReqResUsers,
+			expectedError: false,
+		},
+		{
+			name:          "JSONPlaceholder list of users",
+			url:           "https://jsonplaceholder.typicode.com/users",
+			expected:      testdata.JsonPlaceholderUsers,
+			expectedError: false,
 		},
 	}
 
@@ -31,8 +40,12 @@ func TestRequestAndParse(t *testing.T) {
 		// per each entry make a request to the url provided
 		// compare data with the expected data
 		result, err := f.RequesterParser.RequestAndParse(entry.url)
-		if err != nil {
+		if err != nil && !entry.expectedError {
 			t.Errorf("expected no error, but received: %+v", err)
+		}
+
+		if err == nil && entry.expectedError {
+			t.Error("expected an error, but did not receive any")
 		}
 
 		// Debug the result to compare in detail
