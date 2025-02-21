@@ -5,6 +5,7 @@ import (
 	"os"
 	"stock-aggregator/internal/aggregator"
 	"stock-aggregator/internal/fetcher"
+	"stock-aggregator/utils"
 )
 
 type application struct {
@@ -55,7 +56,7 @@ func (app *application) run() error {
 	result := app.aggregator.CalculateAverages()
 
 	infoLog.Println("Aggregated averages:")
-	PrettyPrint(result)
+	utils.PrettyPrint(result)
 
 	return nil
 }
