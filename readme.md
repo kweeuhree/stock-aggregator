@@ -1,14 +1,20 @@
 # 📈 Stock Market Aggregator
 
-This repository contains a **Stock Market Aggregator** script built with Go.
+This repository contains a **Stock Market Aggregator** CLI program built with Go.
 
 ## 🧑‍💻 About the Project
 
-The project is designed to collect **stock market data** from free APIs and aggregate the data to show the **average price** of stocks.
+The project is designed to collect **stock market data** from free APIs (MarketStack, FMPCloud, and FinHub) and aggregate the data to show the **average price** of stocks, given a user inputs a stock ticker into a prompt.
 
 ### 🎯 Project Goal
 
-The main goal of this project is to implement **Go-native concurrency patterns** and apply them in a real-world scenario of fetching and processing stock data. The system fetches data from multiple APIs in parallel, processes it, and aggregates the data for further analysis.
+The main goal of this project is to implement **Go-native concurrency patterns** and apply them in a real-world scenario of fetching and processing stock data. The program fetches data from multiple APIs concurrently, processes it, and aggregates the data for providing insights.
+
+### 📷 Screen Capture
+
+<p align="center">
+<img src="assets/aggregator.png" alt="Stock Price Aggregator CLI program screenshot">
+</p>
 
 ### 📋 Project Breakdown
 
@@ -31,3 +37,37 @@ The main goal of this project is to implement **Go-native concurrency patterns**
 
 - Receives the fetched stock data from the Fetcher.
 - For now, the method only logs that aggregation is attempted (to be expanded in future development).
+
+**Utility functions**
+
+- Converting a slice of interfaces into a slice of maps
+- Rounding a float64 to two decimals
+- Pretty printing a JSON object to improve readabilty
+
+### 😃 Code Snippets I am excited about
+
+<fieldset align="center">
+<legend align="left">RequesterParser struct allows for modularity and easy testing</legend>
+<img src="assets/requester.png" alt="Fetcher and RequesterParser structs">
+</fieldset>
+
+<br />
+
+<fieldset align="center">
+<legend align="left">Owner-consumer pattern in fetch function for improved modularity</legend>
+<img src="assets/fetch.png" alt="Owner-consumer pattern in fetch function">
+</fieldset>
+
+<br />
+
+<fieldset align="center">
+<legend align="left">For-select pattern for receiving channel values</legend>
+<img src="assets/for-select.png" alt="For-select pattern for receiving channel values">
+</fieldset>
+
+<br />
+
+<fieldset align="center">
+<legend align="left">Dynamic routing of values to the respective slices</legend>
+<img src="assets/dynamic.png" alt="Dynamic routing of values to the respective slices">
+</fieldset>
