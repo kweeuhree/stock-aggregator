@@ -10,7 +10,9 @@ The project is designed to collect **stock market data** from free APIs (MarketS
 
 ### 🎯 Project Goal
 
-The main goal of this project is to implement **Go-native concurrency patterns** and apply them in a real-world scenario of fetching and processing stock data. The program fetches data from multiple APIs concurrently, processes it, and aggregates the data for providing insights.
+The main goal of this project is to implement **Go-native concurrency patterns** and apply them in a real-world scenario of fetching and processing stock data.
+
+Testing goal is to keep testing coverage above 80%.
 
 ---
 
@@ -49,6 +51,13 @@ The main goal of this project is to implement **Go-native concurrency patterns**
 - Converting a slice of interfaces into a slice of maps
 - Rounding a float64 to two decimals
 - Pretty printing a JSON object to improve readabilty
+
+---
+
+### 🧪 Testing
+
+Built-in `testing` library is used for unit and integration tests.
+Current coverage: 85.9% of statements of fetcher package.
 
 ---
 
